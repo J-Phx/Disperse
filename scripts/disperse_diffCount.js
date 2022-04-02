@@ -1,12 +1,12 @@
 const hre = require("hardhat");
-const {getSavedContractAddresses, getIdoAddresses, getRefundAddresses} = require('./utils/utils');
+const {getSavedContractAddresses, getAirdropAddresses} = require('./utils/utils');
 const yesno = require('yesno');
-const config = require('./configs/DisperseConfig.json')
+const config = require('./configs/DisperseConfig.json');
+const { util } = require("chai");
+const { utils } = require("ethers");
 
 // Maximum number of transfers
 const MAXNUMBEROFTX = 100;
-// Amount of single transfer
-const AMOUNTOFTX = 500;
 
 
 async function main() {
@@ -20,18 +20,23 @@ async function main() {
     // Test
     // await disperse_contract.disperseTokenSimple(c.token_address, ["0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67"], AMOUNTOFTX);
     
-    // Ido 
-    // const addresses = getIdoAddresses();
-    
-    // refund
-    const addresses = getRefundAddresses();
-    
-    // Release
-    // var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
-    // Test
-    var totalAmount = addresses.length * AMOUNTOFTX;
-    
-    await token_contract.approve(disperse_contract.address, totalAmount);
+    const address_infos = getAirdropAddresses();
+    let addresses = new Array();
+    let amounts = new Array();
+    let totalAmount = 0;
+    for (let i = 0; i < address_infos.length; i++) {
+        const address_info = address_infos[i];
+        addresses.push(address_info.address);
+        amounts.push(hre.ethers.utils.parseEther(address_info.amount));
+        totalAmount += parseFloat(address_info.amount);
+    }
+
+    if (addresses.length != amounts.length) {
+        console.log("The parameter length is different.");
+        return;
+    }
+    console.log(`Should be approve ${totalAmount} to ${disperse_contract.address}`);
+    await token_contract.approve(disperse_contract.address, hre.ethers,utils.parseEther(totalAmount));
     console.log(`token address is ${token_contract.address}`);
     console.log(`token.approve(${disperse_contract.address}), amount is ${totalAmount}.`);
     let ok = await yesno({
@@ -44,15 +49,17 @@ async function main() {
     batch = parseInt(addresses.length / MAXNUMBEROFTX);
     for (let i = 0; i <= batch; i++) {
         addressesForEach = addresses.splice(0, MAXNUMBEROFTX);
+        amountsForEach = amounts.splice(0, MAXNUMBEROFTX);
         len = addressesForEach.length;
+        if (len != amountsForEach.length) {
+            console.log("The parameter length is different.");
+            return;
+        }
         console.log(`address length:${len}`);
         if (len > 0) {
             console.log(`last address:${addressesForEach[len - 1]}`);
             // batch distribut
-            // Release
-            // await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, hre.ethers.utils.parseEther(""+AMOUNTOFTX));
-            // Test
-            await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, AMOUNTOFTX);
+            await disperse_contract.disperseToken(c.token_address, addressesForEach, amountsForEach);
         }
     }
 }

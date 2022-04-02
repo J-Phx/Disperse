@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const {getSavedContractAddresses, getTestAddresses} = require('./utils/utils');
+const {getSavedContractAddresses, getIdoAddresses} = require('./utils/utils');
 const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json')
 
@@ -17,7 +17,7 @@ async function main() {
     // Test
     // await disperse_contract.disperseTokenSimple(c.token_address, ["0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67"], AMOUNTOFTX);
     
-    const addresses = getTestAddresses();
+    const addresses = getIdoAddresses();
     
     batch = parseInt(addresses.length / MAXNUMBEROFTX);
     for (let i = 0; i <= batch; i++) {

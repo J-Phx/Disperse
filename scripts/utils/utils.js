@@ -34,6 +34,39 @@ function getTestAddresses() {
     return data_json
 }
 
+function getIdoAddresses() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./ido_address.json"))
+    } catch(err) {
+        data = '[]'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
+function getRefundAddresses() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./refund_address.json"))
+    } catch(err) {
+        data = '[]'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
+function getAirdropAddresses() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./airdrop_address_info.json"))
+    } catch(err) {
+        data = '[]'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
 function getBscStakeAllTx() {
     let json
     try {
@@ -67,6 +100,9 @@ function saveBscStakeAllTx(txHash, txData) {
 
 module.exports = {
     getTestAddresses,
+    getIdoAddresses,
+    getRefundAddresses,
+    getAirdropAddresses,
     getStakeConfig,
     getSavedContractAddresses,
     saveStakeConfig,
