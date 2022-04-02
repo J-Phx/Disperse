@@ -6,7 +6,7 @@ const config = require('./configs/DisperseConfig.json')
 // Maximum number of transfers
 const MAXNUMBEROFTX = 200;
 // Amount of single transfer
-const AMOUNTOFTX = hre.ethers.utils.parseEther("1");
+const AMOUNTOFTX = 1;
 
 
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
     console.log(`The address of the token to be distributed is ${token_contract.address}`);
     
     const addresses = getTestAddresses();
-    var totalAmount = addresses.length * AMOUNTOFTX;
+    var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
     await token_contract.approve(disperse_contract.address, totalAmount);
     console.log(`token address is ${token_contract.address}`);
     console.log(`token.approve(${disperse_contract.address}), amount is ${totalAmount}.`);
