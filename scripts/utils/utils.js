@@ -59,9 +59,9 @@ function saveContractAddress(network, contract, address) {
     fs.writeFileSync(path.join(__dirname, '../deployments/contract-addresses.json'), JSON.stringify(addrs, null, '    '))
 }
 
-function saveBscStakeAllTx(address, amount) {
+function saveBscStakeAllTx(txHash, txData) {
     const infos = getBscStakeAllTx() || {}
-    infos[address] = amount
+    infos[txHash] = txData
     fs.writeFileSync(path.join(__dirname, './allTx.json'), JSON.stringify(infos, null, '    '))
 }
 

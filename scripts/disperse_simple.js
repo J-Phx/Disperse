@@ -4,7 +4,7 @@ const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json')
 
 // Maximum number of transfers
-const MAXNUMBEROFTX = 200;
+const MAXNUMBEROFTX = 100;
 // Amount of single transfer
 const AMOUNTOFTX = 1;
 
@@ -16,6 +16,9 @@ async function main() {
     const disperse_contract = await hre.ethers.getContractAt('Disperse', contracts['DISPERSE']);
     const token_contract = await hre.ethers.getContractAt(c.token_abi, c.token_address)
     console.log(`The address of the token to be distributed is ${token_contract.address}`);
+
+    // Test
+    // await disperse_contract.disperseTokenSimple(c.token_address, ["0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67"], AMOUNTOFTX);
     
     const addresses = getTestAddresses();
     var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
@@ -36,8 +39,8 @@ async function main() {
         console.log(`address length:${len}`);
         if (len > 0) {
             console.log(`last address:${addressesForEach[len - 1]}`);
-            // batch mint
-            await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, AMOUNTOFTX);
+            // batch distribut
+            await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, hre.ethers.utils.parseEther(""+AMOUNTOFTX));
         }
     }
 }
