@@ -24,6 +24,8 @@ module.exports = {
     boba_rinkeby: {
       url: 'https://rinkeby.boba.network',
       chainId: 28,
+      gas: 5000000,
+      gasPrice: 1000000000,
       accounts: [process.env.BOBA_RINKEBY_PK],
     },
     bsc_testnet: {

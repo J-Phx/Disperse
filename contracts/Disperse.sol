@@ -2,32 +2,33 @@
 pragma solidity 0.6.12;
 
 
-interface IERC20 {
-    function transfer(address to, uint256 value) external returns (bool);
-    function transferFrom(address from, address to, uint256 value) external returns (bool);
-}
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 
 contract Disperse {
-    function disperseEther(address[] memory recipients, uint256[] memory values) external payable {
-        for (uint256 i = 0; i < recipients.length; i++)
-            payable(recipients[i]).transfer(values[i]);
-        uint256 balance = address(this).balance;
-        if (balance > 0)
-            msg.sender.transfer(balance);
+    using SafeMath for uint256;
+    using SafeERC20 for IERC20;
+
+    constructor() public {}
+
+    function disperseEther(address[] memory _recipients, uint256 _amount) external payable {
+        uint256 totalAmount = _recipients.length.mul(_amount);
+        require(msg.value == totalAmount, "Transfer amount error.");
+
+        for (uint256 i = 0; i < _recipients.length; i++)
+            payable(_recipients[i]).transfer(_amount);
     }
 
-    function disperseToken(IERC20 token, address[] memory recipients, uint256[] memory values) external {
-        uint256 total = 0;
-        for (uint256 i = 0; i < recipients.length; i++)
-            total += values[i];
-        require(token.transferFrom(msg.sender, address(this), total));
-        for (uint256 i = 0; i < recipients.length; i++)
-            require(token.transfer(recipients[i], values[i]));
+    function disperseToken(address _token, address[] memory _recipients, uint256[] memory _amounts) external {
+        IERC20 token = IERC20(_token);
+        require(_recipients.length == _amounts.length, "The number of recipients does not match the number of amounts.");
+        for (uint256 i = 0; i < _recipients.length; i++)
+            token.safeTransferFrom(msg.sender, _recipients[i], _amounts[i]);
     }
 
-    function disperseTokenSimple(IERC20 token, address[] memory recipients, uint256[] memory values) external {
-        for (uint256 i = 0; i < recipients.length; i++)
-            require(token.transferFrom(msg.sender, recipients[i], values[i]));
+    function disperseTokenSimple(address _token, address[] memory _recipients, uint256 _amount) external {
+        IERC20 token = IERC20(_token);
+        for (uint256 i = 0; i < _recipients.length; i++)
+            token.safeTransferFrom(msg.sender, _recipients[i], _amount);
     }
 }

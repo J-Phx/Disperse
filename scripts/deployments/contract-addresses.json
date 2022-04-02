@@ -1,0 +1,14 @@
+{
+    "boba_mainnet": {
+        "DISPERSE": "0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7"
+    },
+    "boba_rinkeby": {
+        "DISPERSE": "0x01ADe957C9477e1e7706BD583472146c4Ea0d531"
+    },
+    "bsc_mainnet": {
+        "DISPERSE": "0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7"
+    },
+    "bsc_testnet": {
+        "DISPERSE": "0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7"
+    }
+}

@@ -2,18 +2,18 @@
     "boba_mainnet": {},
     "bsc_mainnet": {
         "usdt_address": "0x55d398326f99059fF775485246999027B3197955",
-        "start_timestamp": 1648792860,
-        "start_blockNum": 16559852,
+        "start_timestamp": 1648620060,
+        "start_blockNum": 16502110,
         "end_timestamp": 1649145600,
-        "end_blockNum": 16677432
+        "end_blockNum": 16677290
     },
     "boba_rinkeby": {},
     "bsc_testnet": {
         "usdt_address": "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
-        "start_timestamp": 1648524600,
-        "start_blockNum": 17973117,
-        "end_timestamp": 1648526400,
-        "end_blockNum": 17973717
+        "start_timestamp": 1648539000,
+        "start_blockNum": 17977917,
+        "end_timestamp": 1648546200,
+        "end_blockNum": 17980317
     },
     "local": {}
 }
