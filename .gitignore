@@ -4,7 +4,8 @@ coverage
 coverage.json
 typechain
 package-lock.json
-script/utils/*.json
+scripts/utils/*.json
+scripts/utils/*.csv
 
 #Hardhat files
 cache
