@@ -15,12 +15,13 @@ async function main() {
 
     const disperse_contract = await hre.ethers.getContractAt('Disperse', contracts['DISPERSE']);
     const token_contract = await hre.ethers.getContractAt(c.token_abi, c.token_address)
+    console.log(`The address of the token to be distributed is ${token_contract.address}`);
     
     const addresses = getTestAddresses();
     var totalAmount = addresses.length * AMOUNTOFTX;
-    await token_contract.approve(disperse_contract, totalAmount);
+    await token_contract.approve(disperse_contract.address, totalAmount);
     console.log(`token address is ${token_contract.address}`);
-    console.log(`token.approve(${disperse_contract.address}), amount is ${totalAmount}.`)
+    console.log(`token.approve(${disperse_contract.address}), amount is ${totalAmount}.`);
     let ok = await yesno({
         question: 'Are you sure you want to continue?'
     });
