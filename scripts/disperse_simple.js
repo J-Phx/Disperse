@@ -4,10 +4,11 @@ const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json')
 
 // Maximum number of transfers
-const MAXNUMBEROFTX = 100;
+const MAXNUMBEROFTX = 50;
 // Amount of single transfer
 const AMOUNTOFTX = 21;
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function main() {
     console.log(new Date());
@@ -25,8 +26,8 @@ async function main() {
     // const ido_addresses = getIdoAddresses();
     
     // refund
-    // const refund_addresses = getRefundTestAddresses();
-    const refund_addresses = getRefundAddresses();
+    const refund_addresses = getRefundTestAddresses();
+    // const refund_addresses = getRefundAddresses();
     console.log(`The number of refund addresses is ${refund_addresses.length}`);
     
     // complate
@@ -38,9 +39,9 @@ async function main() {
     console.log(`The number of finally addresses is ${addresses.length}`);
     
     // Release
-    // var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
+    var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
     // Test
-    var totalAmount = addresses.length * AMOUNTOFTX;
+    // var totalAmount = addresses.length * AMOUNTOFTX;
     
     await token_contract.approve(disperse_contract.address, totalAmount);
     console.log(`token address is ${token_contract.address}`);
@@ -58,16 +59,19 @@ async function main() {
         len = addressesForEach.length;
         console.log(`address length:${len}`);
         if (len > 0) {
-            console.log(`last address:${addressesForEach[len - 1]}`);
+            console.log(`last address:${addressesForEach[len - 1]}, start time:${new Date()}`);
             // batch distribut
             // Release
-            // await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, hre.ethers.utils.parseEther(""+AMOUNTOFTX));
+            await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, hre.ethers.utils.parseEther(""+AMOUNTOFTX));
             // Test
-            await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, AMOUNTOFTX);
+            // await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, AMOUNTOFTX);
 
             // 
             console.log(`The number of addressesForEach is ${addressesForEach.length}`);
             saveCompleteAddress(addressesForEach)
+            
+            await sleep(10000)
+            console.log(`last address:${addressesForEach[len - 1]}, end time:${new Date()}`);
         }
     }
     console.log(new Date());
