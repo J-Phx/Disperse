@@ -70,7 +70,7 @@ async function main() {
             console.log(`The number of addressesForEach is ${addressesForEach.length}`);
             saveCompleteAddress(addressesForEach)
             
-            await sleep(10000)
+            await sleep(30000)
             console.log(`last address:${addressesForEach[len - 1]}, end time:${new Date()}`);
         }
     }

@@ -123,7 +123,7 @@ function saveBscStakeAllTx(txHash, txData) {
 function saveCompleteAddress(addresses) {
     var infos = getCompleteAddress() || []
     infos = infos.concat(addresses)
-    console.log(`The number of complate address is ${infos.length}`);
+    console.log(`The number of complete address is ${infos.length}`);
     fs.writeFileSync(path.join(__dirname, './complete_address.json'), JSON.stringify(infos, null, '    '))
 }
 
