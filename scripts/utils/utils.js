@@ -78,10 +78,10 @@ function getAirdropAddresses() {
     return data_json
 }
 
-function getComplateAddress() {
+function getCompleteAddress() {
     let json
     try {
-        json = fs.readFileSync(path.join(__dirname, './complate_address.json'))
+        json = fs.readFileSync(path.join(__dirname, './complete_address.json'))
     } catch (err) {
         json = '[]'
     }
@@ -120,12 +120,11 @@ function saveBscStakeAllTx(txHash, txData) {
     fs.writeFileSync(path.join(__dirname, './allTx.json'), JSON.stringify(infos, null, '    '))
 }
 
-function saveComplateAddress(addresses) {
-    var infos = getComplateAddress() || []
-    console.log(`The number of complate address is ${infos.length}`);
-    console.log(`The number of addresses is ${addresses.length}`);
+function saveCompleteAddress(addresses) {
+    var infos = getCompleteAddress() || []
     infos = infos.concat(addresses)
-    fs.writeFileSync(path.join(__dirname, './complate_address.json'), JSON.stringify(infos, null, '    '))
+    console.log(`The number of complate address is ${infos.length}`);
+    fs.writeFileSync(path.join(__dirname, './complete_address.json'), JSON.stringify(infos, null, '    '))
 }
 
 module.exports = {
@@ -134,11 +133,11 @@ module.exports = {
     getRefundAddresses,
     getRefundTestAddresses,
     getAirdropAddresses,
-    getComplateAddress,
+    getCompleteAddress,
     getStakeConfig,
     getSavedContractAddresses,
     saveStakeConfig,
     saveContractAddress,
     saveBscStakeAllTx,
-    saveComplateAddress
+    saveCompleteAddress
 }

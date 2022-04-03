@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const {getSavedContractAddresses, saveComplateAddress, getComplateAddress, getIdoAddresses, getRefundAddresses, getRefundTestAddresses} = require('./utils/utils');
+const {getSavedContractAddresses, saveCompleteAddress, getCompleteAddress, getIdoAddresses, getRefundAddresses, getRefundTestAddresses} = require('./utils/utils');
 const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json')
 
@@ -30,11 +30,11 @@ async function main() {
     console.log(`The number of refund addresses is ${refund_addresses.length}`);
     
     // complate
-    const complate_addresses = getComplateAddress()
-    console.log(`The number of complate addresses is ${complate_addresses.length}`);
+    const complete_addresses = getCompleteAddress()
+    console.log(`The number of complate addresses is ${complete_addresses.length}`);
     
     // 
-    const addresses = refund_addresses.filter(function(v){ return complate_addresses.indexOf(v) == -1 })
+    const addresses = refund_addresses.slice(complete_addresses.length);
     console.log(`The number of finally addresses is ${addresses.length}`);
     
     // Release
@@ -67,7 +67,7 @@ async function main() {
 
             // 
             console.log(`The number of addressesForEach is ${addressesForEach.length}`);
-            saveComplateAddress(addressesForEach)
+            saveCompleteAddress(addressesForEach)
         }
     }
     console.log(new Date());
