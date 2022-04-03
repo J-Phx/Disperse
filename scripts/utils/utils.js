@@ -56,6 +56,17 @@ function getRefundAddresses() {
     return data_json
 }
 
+function getRefundTestAddresses() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./refund_test_address.json"))
+    } catch(err) {
+        data = '[]'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
 function getAirdropAddresses() {
     let data
     try {
@@ -65,6 +76,17 @@ function getAirdropAddresses() {
     }
     const data_json = JSON.parse(data)
     return data_json
+}
+
+function getComplateAddress() {
+    let json
+    try {
+        json = fs.readFileSync(path.join(__dirname, './complate_address.json'))
+    } catch (err) {
+        json = '[]'
+    }
+    const infos = JSON.parse(json)
+    return infos
 }
 
 function getBscStakeAllTx() {
@@ -98,14 +120,25 @@ function saveBscStakeAllTx(txHash, txData) {
     fs.writeFileSync(path.join(__dirname, './allTx.json'), JSON.stringify(infos, null, '    '))
 }
 
+function saveComplateAddress(addresses) {
+    var infos = getComplateAddress() || []
+    console.log(`The number of complate address is ${infos.length}`);
+    console.log(`The number of addresses is ${addresses.length}`);
+    infos = infos.concat(addresses)
+    fs.writeFileSync(path.join(__dirname, './complate_address.json'), JSON.stringify(infos, null, '    '))
+}
+
 module.exports = {
     getTestAddresses,
     getIdoAddresses,
     getRefundAddresses,
+    getRefundTestAddresses,
     getAirdropAddresses,
+    getComplateAddress,
     getStakeConfig,
     getSavedContractAddresses,
     saveStakeConfig,
     saveContractAddress,
-    saveBscStakeAllTx
+    saveBscStakeAllTx,
+    saveComplateAddress
 }

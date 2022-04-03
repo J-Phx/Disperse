@@ -49,6 +49,7 @@ if __name__ == "__main__":
     refundFilePath = os.path.join(basePath) + '\\utils\\refund_address.json'
     idoFilePath = os.path.join(basePath) + '\\utils\\ido_address.json'
     airdropFilePath = os.path.join(basePath) + '\\utils\\airdrop_address_info.json'
+    refundTestFilePath = os.path.join(basePath) + '\\utils\\refund_test_address.json'
 
 
     safepal_wt_address_infos = []
@@ -78,6 +79,9 @@ if __name__ == "__main__":
     with open(refundFilePath, 'w', encoding='utf-8') as wf:
         json.dump(refunded_addresses, wf)
     
+    with open(refundTestFilePath, 'w', encoding='utf-8') as wf:
+        json.dump(refunded_addresses[:100], wf)
+
     # IDO addresses
     with open(idoFilePath, 'w', encoding='utf-8') as wf:
         json.dump(safepal_wt_addresses, wf)

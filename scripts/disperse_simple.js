@@ -1,15 +1,16 @@
 const hre = require("hardhat");
-const {getSavedContractAddresses, getIdoAddresses, getRefundAddresses} = require('./utils/utils');
+const {getSavedContractAddresses, saveComplateAddress, getComplateAddress, getIdoAddresses, getRefundAddresses, getRefundTestAddresses} = require('./utils/utils');
 const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json')
 
 // Maximum number of transfers
 const MAXNUMBEROFTX = 100;
 // Amount of single transfer
-const AMOUNTOFTX = 500;
+const AMOUNTOFTX = 21;
 
 
 async function main() {
+    console.log(new Date());
     const contracts = getSavedContractAddresses()[hre.network.name];
     const c = config[hre.network.name]
 
@@ -21,10 +22,20 @@ async function main() {
     // await disperse_contract.disperseTokenSimple(c.token_address, ["0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67"], AMOUNTOFTX);
     
     // Ido 
-    // const addresses = getIdoAddresses();
+    // const ido_addresses = getIdoAddresses();
     
     // refund
-    const addresses = getRefundAddresses();
+    // const refund_addresses = getRefundTestAddresses();
+    const refund_addresses = getRefundAddresses();
+    console.log(`The number of refund addresses is ${refund_addresses.length}`);
+    
+    // complate
+    const complate_addresses = getComplateAddress()
+    console.log(`The number of complate addresses is ${complate_addresses.length}`);
+    
+    // 
+    const addresses = refund_addresses.filter(function(v){ return complate_addresses.indexOf(v) == -1 })
+    console.log(`The number of finally addresses is ${addresses.length}`);
     
     // Release
     // var totalAmount = hre.ethers.utils.parseEther("" + addresses.length * AMOUNTOFTX);
@@ -53,8 +64,13 @@ async function main() {
             // await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, hre.ethers.utils.parseEther(""+AMOUNTOFTX));
             // Test
             await disperse_contract.disperseTokenSimple(c.token_address, addressesForEach, AMOUNTOFTX);
+
+            // 
+            console.log(`The number of addressesForEach is ${addressesForEach.length}`);
+            saveComplateAddress(addressesForEach)
         }
     }
+    console.log(new Date());
 }
 
 
