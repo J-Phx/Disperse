@@ -29,8 +29,9 @@ module.exports = {
       accounts: [process.env.BOBA_RINKEBY_PK],
     },
     bsc_testnet: {
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+      url: 'https://data-seed-prebsc-2-s1.binance.org:8545',
       chainId: 97,
+      gas: 5000000,
       accounts: [process.env.BSC_TESTNET_PK],
     },
     local: {

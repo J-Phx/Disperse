@@ -1,5 +1,35 @@
 const fs = require('fs')
 const path = require('path')
+const mysql = require('mysql')
+
+// connect mysql
+const pool = mysql.createPool({
+    host: '8.210.210.140', // 连接的服务器
+    port: 3306, // mysql服务运行的端口
+    user: 'boba', // 用户名
+    password: 'Boba@2022', // 用户密码  
+    database: 'boba_prod', // 选择的库
+})
+
+let query = function (sql, values) {
+    return new Promise((resolve, reject) => {
+        pool.getConnection(function (err, connection) {
+            if (err) {
+                reject(err)
+            } else {
+                connection.query(sql, values, (err, rows) => {
+
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(rows)
+                    }
+                    connection.release()
+                })
+            }
+        })
+    })
+}
 
 function getStakeConfig() {
     let json
@@ -27,7 +57,7 @@ function getTestAddresses() {
     let data
     try {
         data = fs.readFileSync(path.join(__dirname, "./addresses.json"))
-    } catch(err) {
+    } catch (err) {
         data = '[]'
     }
     const data_json = JSON.parse(data)
@@ -38,18 +68,43 @@ function getIdoAddresses() {
     let data
     try {
         data = fs.readFileSync(path.join(__dirname, "./ido_address.json"))
-    } catch(err) {
+    } catch (err) {
         data = '[]'
     }
     const data_json = JSON.parse(data)
     return data_json
 }
 
+async function getIdoAddressesFromDb(limit) {
+    console.log('================SELECT==================');
+    let sql;
+    if (limit && limit !== undefined) {
+        sql = `SELECT address,amount FROM ido_addresses WHERE transferred=0 LIMIT ${limit}`;
+    } else {
+        sql = `SELECT address,amount FROM ido_addresses WHERE transferred=0`;
+    }
+
+    console.log(`SQL: ${sql}`);
+    const data_json = await query(sql);
+    console.log(`The number of data is ${data_json.length}`);
+    return data_json;
+}
+
+async function updateIdoAddressesToDb(addresses) {
+    console.log('================SELECT==================');
+    await addresses.forEach(async address => {
+        const sql = `UPDATE ido_addresses SET transferred=1 WHERE address='${address}'`;
+        // console.log(`SQL: ${sql}`);
+        await query(sql)
+    });
+    
+}
+
 function getRefundAddresses() {
     let data
     try {
         data = fs.readFileSync(path.join(__dirname, "./refund_address.json"))
-    } catch(err) {
+    } catch (err) {
         data = '[]'
     }
     const data_json = JSON.parse(data)
@@ -60,7 +115,7 @@ function getRefundTestAddresses() {
     let data
     try {
         data = fs.readFileSync(path.join(__dirname, "./refund_test_address.json"))
-    } catch(err) {
+    } catch (err) {
         data = '[]'
     }
     const data_json = JSON.parse(data)
@@ -71,7 +126,7 @@ function getAirdropAddresses() {
     let data
     try {
         data = fs.readFileSync(path.join(__dirname, "./airdrop_address_info.json"))
-    } catch(err) {
+    } catch (err) {
         data = '[]'
     }
     const data_json = JSON.parse(data)
@@ -130,12 +185,14 @@ function saveCompleteAddress(addresses) {
 module.exports = {
     getTestAddresses,
     getIdoAddresses,
+    getIdoAddressesFromDb,
     getRefundAddresses,
     getRefundTestAddresses,
     getAirdropAddresses,
     getCompleteAddress,
     getStakeConfig,
     getSavedContractAddresses,
+    updateIdoAddressesToDb,
     saveStakeConfig,
     saveContractAddress,
     saveBscStakeAllTx,
