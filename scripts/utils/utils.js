@@ -91,7 +91,7 @@ async function getIdoAddressesFromDb(limit) {
 }
 
 async function updateIdoAddressesToDb(addresses) {
-    console.log('================SELECT==================');
+    console.log('================UPDATE==================');
     await addresses.forEach(async address => {
         const sql = `UPDATE ido_addresses SET transferred=1 WHERE address='${address}'`;
         // console.log(`SQL: ${sql}`);
