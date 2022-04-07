@@ -4,7 +4,8 @@ const mysql = require('mysql')
 
 // connect mysql
 const pool = mysql.createPool({
-    host: '8.210.210.140', // 连接的服务器
+    // host: '8.210.210.140', // 连接的服务器
+    host: '172.31.184.186', // 连接的服务器
     port: 3306, // mysql服务运行的端口
     user: 'boba', // 用户名
     password: 'Boba@2022', // 用户密码  
@@ -79,9 +80,9 @@ async function getIdoAddressesFromDb(limit) {
     console.log('================SELECT==================');
     let sql;
     if (limit && limit !== undefined) {
-        sql = `SELECT address,amount FROM ido_addresses WHERE transferred=0 LIMIT ${limit}`;
+        sql = `SELECT address,amount FROM ido_addresses WHERE status!=2 LIMIT ${limit}`;
     } else {
-        sql = `SELECT address,amount FROM ido_addresses WHERE transferred=0`;
+        sql = `SELECT address,amount FROM ido_addresses WHERE status!=2`;
     }
 
     console.log(`SQL: ${sql}`);
@@ -90,10 +91,19 @@ async function getIdoAddressesFromDb(limit) {
     return data_json;
 }
 
-async function updateIdoAddressesToDb(addresses) {
-    console.log('================SELECT==================');
+async function getIdoAddressesFromDbByStatus(status) {
+    console.log('================SELECT By Status==================');
+    let sql = `SELECT address,amount FROM ido_addresses WHERE status=${status}`;
+
+    console.log(`SQL: ${sql}`);
+    const data_json = await query(sql);
+    return data_json;
+}
+
+async function updateIdoAddressesToDb(addresses, status) {
+    console.log('================Update Status==================');
     await addresses.forEach(async address => {
-        const sql = `UPDATE ido_addresses SET transferred=1 WHERE address='${address}'`;
+        const sql = `UPDATE ido_addresses SET status=${status} WHERE address='${address}'`;
         // console.log(`SQL: ${sql}`);
         await query(sql)
     });
@@ -186,6 +196,7 @@ module.exports = {
     getTestAddresses,
     getIdoAddresses,
     getIdoAddressesFromDb,
+    getIdoAddressesFromDbByStatus,
     getRefundAddresses,
     getRefundTestAddresses,
     getAirdropAddresses,

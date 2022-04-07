@@ -10,5 +10,8 @@
     },
     "bsc_testnet": {
         "DISPERSE": "0xAE069676C6050C8428fd758ca013d1B942CD0F41"
+    },
+    "rinkeby": {
+        "DISPERSE": "0xa5b5c06E39fb9751318841ef0FB2e0234a8d283a"
     }
 }

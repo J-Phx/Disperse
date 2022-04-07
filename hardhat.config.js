@@ -34,6 +34,12 @@ module.exports = {
       gas: 5000000,
       accounts: [process.env.BSC_TESTNET_PK],
     },
+    rinkeby: {
+      url: 'https://rinkeby.infura.io/v3/99421d9136654a658cd4e2d499b51f8b',
+      chainId: 4,
+      gas: 5000000,
+      accounts: [process.env.BSC_TESTNET_PK],
+    },
     local: {
       url: 'http://localhost:8545',
     },

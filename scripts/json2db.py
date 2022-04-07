@@ -13,6 +13,9 @@ cursor = db.cursor()
 # SQL 插入语句
 sql = "INSERT INTO ido_addresses(address, amount) VALUES (%s, %s)"
 
+# IDO可分配BRE的额度
+IDO_AMOUNT = 525
+
 
 def checkSafepalWt(filePath):
     global safepal_wt_address_infos, safepal_wt_addresses
@@ -48,7 +51,7 @@ if __name__ == "__main__":
     datas = []
     for address_infos in safepal_wt_address_infos:
         address = address_infos["address"]
-        amount = '%.4f' % (float(address_infos["amount"]) + 525)
+        amount = '%.4f' % (float(address_infos["amount"]) + IDO_AMOUNT)
         # cursor.execute(sql, (address, str(amount)))
         datas.append((address, amount))
     
