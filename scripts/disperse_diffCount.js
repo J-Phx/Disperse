@@ -15,7 +15,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Milliseconds
 // const SLEEP_MS = 30000;
 const SLEEP_MS = 10000;
-const SLEEP_MS_UPDATE_DB = 1000;
+const SLEEP_MS_UPDATE_DB = 2000;
 
 // Maximum number of transfers
 const MAXNUMBEROFTX = 100;
@@ -61,6 +61,11 @@ async function main() {
     if (!ok) {
         process.exit(0)
     }
+
+    // Current progress
+    const success_addresses = await getIdoAddressesFromDbByStatus(SUCCESS_CODE);
+    var progress_count = success_addresses.length;
+    console.log(`The number of addresses currently transferred is ${progress_count}`);
     
     while (true) {
         const address_infos = await getIdoAddressesFromDb(MAXNUMBEROFTX);
@@ -102,8 +107,8 @@ async function main() {
             await sleep(SLEEP_MS_UPDATE_DB)
             console.log(`INFO: The address of the current batch was transferred successfully, the first address:${addresses[0]}, end time:${new Date()}`);
             // Current progress
-            const success_addresses = await getIdoAddressesFromDbByStatus(SUCCESS_CODE);
-            console.log(`INFO: The total number of addresses that have been transferred is >>>${success_addresses.length}<<<`);
+            progress_count += addresses.length;
+            console.log(`INFO: The total number of addresses that have been transferred is >>>${progress_count}<<<`);
             // Sleep
             await sleep(SLEEP_MS)
         } else {
