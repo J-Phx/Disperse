@@ -17,7 +17,7 @@ module.exports = {
       accounts: [process.env.BOBA_MAINNET_PK],
     },
     bsc_mainnet: {
-      url: 'https://bscrpc.com',
+      url: 'https://bsc-dataseed1.defibit.io/',
       chainId: 56,
       accounts: [process.env.BSC_MAINNET_PK],
     },
