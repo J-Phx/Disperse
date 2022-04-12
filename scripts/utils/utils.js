@@ -115,6 +115,14 @@ async function updateIdoAddressesToDb(addresses, status) {
     
 }
 
+async function insertAirdropAddressesToDdb(values) {
+    console.log('================Insert Into==================');
+    var instring = values.join(",");
+    let sql = `INSERT INTO airdrop_history (address, method, amount, network, blockNumber) VALUES ${instring};`;
+    // console.log(`SQL is < ${sql} >`);
+    await query(sql);
+}
+
 function getRefundAddresses() {
     let data
     try {
@@ -209,6 +217,7 @@ module.exports = {
     getStakeConfig,
     getSavedContractAddresses,
     updateIdoAddressesToDb,
+    insertAirdropAddressesToDdb,
     saveStakeConfig,
     saveContractAddress,
     saveBscStakeAllTx,
