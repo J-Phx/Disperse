@@ -101,13 +101,26 @@ async function getIdoAddressesFromDbByStatus(status) {
 }
 
 async function updateIdoAddressesToDb(addresses, status) {
+    // console.log('================Update Status==================');
+    // await addresses.forEach(async address => {
+    //     const sql = `UPDATE ido_addresses SET status=${status} WHERE address='${address}'`;
+    //     // console.log(`SQL: ${sql}`);
+    //     await query(sql)
+    // });
+
     console.log('================Update Status==================');
-    await addresses.forEach(async address => {
-        const sql = `UPDATE ido_addresses SET status=${status} WHERE address='${address}'`;
-        // console.log(`SQL: ${sql}`);
-        await query(sql)
-    });
+    var instring = "'" + addresses.join("','") + "'";
+    let sql = `UPDATE ido_addresses SET status=${status} WHERE address in (${instring})`;
+    await query(sql);
     
+}
+
+async function insertAirdropAddressesToDdb(values) {
+    console.log('================Insert Into==================');
+    var instring = values.join(",");
+    let sql = `INSERT INTO airdrop_history (address, method, amount, network, blockNumber) VALUES ${instring};`;
+    // console.log(`SQL is < ${sql} >`);
+    await query(sql);
 }
 
 function getRefundAddresses() {
@@ -204,6 +217,7 @@ module.exports = {
     getStakeConfig,
     getSavedContractAddresses,
     updateIdoAddressesToDb,
+    insertAirdropAddressesToDdb,
     saveStakeConfig,
     saveContractAddress,
     saveBscStakeAllTx,

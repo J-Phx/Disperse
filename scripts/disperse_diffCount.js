@@ -13,16 +13,17 @@ const ERROR_CODE = 3;
 // Sleep func
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Milliseconds
-// const SLEEP_MS = 30000;
-const SLEEP_MS = 10000;
-const SLEEP_MS_UPDATE_DB = 2000;
+const SLEEP_MS = 30000;
+// const SLEEP_MS_UPDATE_DB = 2000;
 
 // Maximum number of transfers
-const MAXNUMBEROFTX = 100;
+const MAXNUMBEROFTX = 50;
 
 // Approve amount (Larger than actual amount)
-const APPROVE_AMOUNT = 16069000;
 // Actual amount: 16068833.6673
+const APPROVE_AMOUNT = 16069000;
+// const APPROVE_AMOUNT = 4750;
+// 16,073,750
 
 
 async function main() {
@@ -91,7 +92,7 @@ async function main() {
         if (addresses.length > 0) {
             // batch distribut
             await updateIdoAddressesToDb(addresses, ING_CODE)
-            await sleep(SLEEP_MS_UPDATE_DB)
+            // await sleep(SLEEP_MS_UPDATE_DB)
             console.log("INFO: The address of the current batch starts the transfer.");
             try {
                 await disperse_contract.disperseToken(c.token_address, addresses, amounts);
@@ -99,12 +100,12 @@ async function main() {
                 // Update status to 3
                 await updateIdoAddressesToDb(addresses, ERROR_CODE);
                 // To update the database
-                await sleep(SLEEP_MS)
+                // await sleep(SLEEP_MS)
                 console.log(`ERROR: The current batch of addresses failed to transfer, reason: ${error}`);
                 break;
             }
             await updateIdoAddressesToDb(addresses, SUCCESS_CODE);
-            await sleep(SLEEP_MS_UPDATE_DB)
+            // await sleep(SLEEP_MS_UPDATE_DB)
             console.log(`INFO: The address of the current batch was transferred successfully, the first address:${addresses[0]}, end time:${new Date()}`);
             // Current progress
             progress_count += addresses.length;
