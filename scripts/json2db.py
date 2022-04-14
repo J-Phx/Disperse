@@ -1,6 +1,5 @@
 import os
 import json
-from tkinter import E
 import pymysql
 
 
