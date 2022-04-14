@@ -35,7 +35,7 @@ def calculate_amount_new(Z, W_total, user_infos):
             new_amount = user_infos[user_id]['alloc']
             if(new_amount > Y):
                 rest_token += new_amount - Y
-                W_overflow -= (user_stake * mul)
+                W_overflow += user_stake * mul
                 user_infos[user_id]['alloc'] = Y
 
     if rest_token > 0:
@@ -43,10 +43,10 @@ def calculate_amount_new(Z, W_total, user_infos):
         print("rest_token:", rest_token)
         print("max reached")
         pprint(user_infos)
-        W_left = W_total + W_overflow
-        Z2 = rest_token / W_left
-        calculate_amount_new(Z2, W_left, user_infos)
-        # amount += Z2 * (user_stake * mul)
+        W_left = W_total - W_overflow
+        if W_left > 0:
+            Z2 = rest_token / W_left
+            calculate_amount_new(Z2, W_left, user_infos)
 
 
 def calculate_amount(user_id):
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     tier_stake_totle = {}
     user_stake_tier = {}
     X = 1000000  # 预售token个数
-    Y = 200000   # 硬封顶
+    Y = 100000   # 硬封顶
     rest_token = 0
     W_total = 0
     W_overflow = 0
