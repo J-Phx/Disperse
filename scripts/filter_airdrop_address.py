@@ -27,27 +27,63 @@ def get_withdraw_info(network, block_start, block_end):
     return result_json
 
 
-def calculate_compliant_addresses(deposit_infos, withdraw_infos, index):
-    for waddress, wamount in withdraw_infos.items():
-        if compliant_address_infos.get(waddress):
-            current_address_amount = compliant_address_infos[waddress]["amount"] - wamount
-            if current_address_amount >= amount_limit_info[compliant_address_infos[waddress]["index"]]:
-                compliant_address_infos[waddress]["amount"] = current_address_amount
-            else:
-                del compliant_address_infos[waddress]
-        
-        if deposit_infos.get(waddress):
-            deposit_infos[waddress] = deposit_infos[waddress] - wamount
-    
+"""
+AirDrop requirement	LPT Balance For Day1 Participants	LPT Balance For Day2 Participants	LPT Balance For Day3 Participants	LPT Balance For Day4 Participants	LPT Balance For Last Day Participants
+2022/4/11	3.00 	0.00 	0.00 	0.00 	0.00 
+2022/4/12	3.00 	3.75 	0.00 	0.00 	0.00 
+2022/4/13	3.00 	3.75 	5.00 	0.00 	0.00 
+2022/4/14	3.00 	3.75 	5.00 	7.50 	0.00 
+2022/4/15	3.00 	3.75 	5.00 	7.50 	15.00 
+"""
+def calculate_eligible_addresses(network, deposit_infos, withdraw_infos, index):
+    eligible_address_infos = all_eligible_address_infos[network]
+
     for daddress, damount in deposit_infos.items():
-        if compliant_address_infos.get(daddress):
-            compliant_address_infos[daddress]["amount"] = compliant_address_infos[daddress]["amount"] + damount
+        if eligible_address_infos.get(daddress):
+            eligible_address_infos[daddress]["amount"] = eligible_address_infos[daddress]["amount"] + damount
         else:
             if damount >= amount_limit_info[index]:
-                compliant_address_infos[daddress] = {"amount": damount, "index": index}
+                eligible_address_infos[daddress] = {"amount": damount, "index": index}
+    print(f"Before calculating withdraw, the eligible addresses are <{len(eligible_address_infos)}>")
+    
+    for waddress, wamount in withdraw_infos.items():
+        if eligible_address_infos.get(waddress):
+            current_address_amount = eligible_address_infos[waddress]["amount"] - wamount
+            if current_address_amount >= amount_limit_info[eligible_address_infos[waddress]["index"]]:
+                eligible_address_infos[waddress]["amount"] = current_address_amount
+            else:
+                del eligible_address_infos[waddress]
+    print(f"After calculating withdraw, the eligible addresses are <{len(eligible_address_infos)}>")
+        # if deposit_infos.get(waddress):
+        #     deposit_infos[waddress] = deposit_infos[waddress] - wamount
+    all_eligible_address_infos[network] = eligible_address_infos
+
+
+def calculate_airdrop_amount():
+    bsc_address_infos = all_eligible_address_infos["bsc_mainnet"]
+    boba_address_infos = all_eligible_address_infos["boba_mainnet"]
+    total_stake_amount = sum([info["amount"] for info in bsc_address_infos.values()]) + sum([info["amount"] for info in boba_address_infos.values()])
+    print(f"A total of < {total_stake_amount} > LPTs were staked on both chains.")
+
+    share_per_share = BRE_airdrop_amount / total_stake_amount
+    print(f"< {share_per_share} > BRE for every 1 LPT staked.")
+
+    for network, address_infos in all_eligible_address_infos.items():
+        infos = []
+        for address, info in address_infos.items():
+            bre_amount = info["amount"] * share_per_share
+            infos.append(f"('{address}', {bre_amount}, '{network}')")
+        
+        sql = f"INSERT INTO airdrop_addresses (address, amount, network) VALUES {','.join(infos)};"
+        cursor.execute(sql)
+        db.commit()
+        print(f"The data on the {network} chain has been successfully inserted into the database.")
+
 
 
 if __name__ == "__main__":
+
+    BRE_airdrop_amount = 20000
 
     amount_limit_info = {
         "1": 3,
@@ -57,14 +93,19 @@ if __name__ == "__main__":
         "5": 15,
     }
     base_info = {
-        "bsc_mainnet": [16848378, 16877147, 16905784],  
-        "boba_mainnet": [464995, 468180, 471104]
+        "bsc_mainnet": [16848378, 16877147, 16905784, 16934550],  
+        "boba_mainnet": [464995, 468180, 471104, 473946]
     }
 
-    compliant_address_infos = {}
+    all_eligible_address_infos = {"bsc_mainnet": {}, "boba_mainnet": {}}
 
     for network, blockNumbers in base_info.items():
         for index in range(len(blockNumbers)-1):
             daily_deposit_infos = get_deposit_info(network=network, block_start=blockNumbers[index], block_end=blockNumbers[index+1], index=str(index+1))
             daily_withdraw_infos = get_withdraw_info(network=network, block_start=blockNumbers[index], block_end=blockNumbers[index+1])
-            calculate_compliant_addresses(daily_deposit_infos, daily_withdraw_infos, str(index+1))
+            calculate_eligible_addresses(network, daily_deposit_infos, daily_withdraw_infos, str(index+1))
+    
+    print("="*20)
+    print(f"The total number of eligible addresses on the BSC chain is {len(all_eligible_address_infos['bsc_mainnet'])}")
+    print(f"The total number of eligible addresses on the Boba chain is {len(all_eligible_address_infos['boba_mainnet'])}")
+    calculate_airdrop_amount()
