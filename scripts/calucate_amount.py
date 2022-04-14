@@ -35,7 +35,7 @@ def calculate_amount_new(Z, W_total, user_infos):
             new_amount = user_infos[user_id]['alloc']
             if(new_amount > Y):
                 rest_token += new_amount - Y
-                W_overflow -= (user_stake * mul)
+                W_overflow += user_stake * mul
                 user_infos[user_id]['alloc'] = Y
 
     if rest_token > 0:
@@ -43,10 +43,10 @@ def calculate_amount_new(Z, W_total, user_infos):
         print("rest_token:", rest_token)
         print("max reached")
         pprint(user_infos)
-        W_left = W_total + W_overflow
-        Z2 = rest_token / W_left
-        calculate_amount_new(Z2, W_left, user_infos)
-        # amount += Z2 * (user_stake * mul)
+        W_left = W_total - W_overflow
+        if W_left > 0:
+            Z2 = rest_token / W_left
+            calculate_amount_new(Z2, W_left, user_infos)
 
 
 def calculate_amount(user_id):
@@ -83,22 +83,22 @@ if __name__ == "__main__":
     }
     tier_stake_totle = {}
     user_stake_tier = {}
-    X = 1000000  # 预售token个数
-    Y = 200000   # 硬封顶
+    X = 1250000  # 预售token个数
+    Y = 500000   # 硬封顶
     rest_token = 0
     W_total = 0
     W_overflow = 0
 
     user_infos = {
         "0": {"stake": 10, "alloc": 0},  # tier1
-        "1": {"stake": 8, "alloc": 0},  # tier1
-        "8": {"stake": 2, "alloc": 0},  # tier1
-        "2": {"stake": 25000, "alloc": 0},  # tier2
-        "3": {"stake": 20000, "alloc": 0},  # tier2
-        "4": {"stake": 32000, "alloc": 0},  # tier3
-        "5": {"stake": 60000, "alloc": 0},  # tier4
+        "1": {"stake": 2000, "alloc": 0},  # tier1
+        "2": {"stake": 20000, "alloc": 0},  # tier2
+        "3": {"stake": 25000, "alloc": 0},  # tier2
+#         "4": {"stake": 32000, "alloc": 0},  # tier3
+#         "5": {"stake": 60000, "alloc": 0},  # tier4
         "6": {"stake": 80000, "alloc": 0},  # tier4
         "7": {"stake": 200000, "alloc": 0},  # tier5
+#         "8": {"stake": 2, "alloc": 0},  # tier1
     }
 
     for key, value in user_infos.items():
@@ -117,22 +117,3 @@ if __name__ == "__main__":
     for user_id in user_infos.keys():
         total += user_infos[user_id]['alloc']
     print("total:", total)
-
-    # amount = calculate_amount(user_id="0")
-    # print(f"用户0可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="1")
-    # print(f"用户1可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="2")
-    # print(f"用户2可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="3")
-    # print(f"用户3可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="4")
-    # print(f"用户4可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="5")
-    # print(f"用户5可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="6")
-    # print(f"用户6可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="7")
-    # print(f"用户7可分配的额度为: {amount}")
-    # amount = calculate_amount(user_id="8")
-    # print(f"用户8可分配的额度为: {amount}")
