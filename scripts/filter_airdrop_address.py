@@ -9,7 +9,7 @@ cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
 
 
 def get_deposit_info(network, block_start, block_end, index):
-    if index == "1":
+    if index == "0":
         sql = f"SELECT address, SUM(amount) as amount FROM airdrop_history WHERE network='{network}' AND method='Deposit' AND blockNumber BETWEEN {block_start} AND {block_end} GROUP BY address HAVING amount >= 3;"
     else:
         sql = f"SELECT address, SUM(amount) as amount FROM airdrop_history WHERE network='{network}' AND method='Deposit' AND blockNumber BETWEEN {block_start} AND {block_end} GROUP BY address;"
@@ -86,6 +86,7 @@ if __name__ == "__main__":
     BRE_airdrop_amount = 20000
 
     amount_limit_info = {
+        "0": 3,
         "1": 3,
         "2": 3.75,
         "3": 5,
@@ -93,8 +94,8 @@ if __name__ == "__main__":
         "5": 15,
     }
     base_info = {
-        "bsc_mainnet": [16848378, 16877147, 16905784, 16934550],  
-        "boba_mainnet": [464995, 468180, 471104, 473946]
+        "bsc_mainnet": [16674629, 16848378, 16877147, 16905784, 16934550, 16963292, 16991858],  
+        "boba_mainnet": [444606, 464995, 468180, 471104, 473946, 476180, 477899]
     }
 
     all_eligible_address_infos = {"bsc_mainnet": {}, "boba_mainnet": {}}
@@ -103,7 +104,7 @@ if __name__ == "__main__":
         for index in range(len(blockNumbers)-1):
             daily_deposit_infos = get_deposit_info(network=network, block_start=blockNumbers[index], block_end=blockNumbers[index+1], index=str(index+1))
             daily_withdraw_infos = get_withdraw_info(network=network, block_start=blockNumbers[index], block_end=blockNumbers[index+1])
-            calculate_eligible_addresses(network, daily_deposit_infos, daily_withdraw_infos, str(index+1))
+            calculate_eligible_addresses(network, daily_deposit_infos, daily_withdraw_infos, str(index))
     
     print("="*20)
     print(f"The total number of eligible addresses on the BSC chain is {len(all_eligible_address_infos['bsc_mainnet'])}")
