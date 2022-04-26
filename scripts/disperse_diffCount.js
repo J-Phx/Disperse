@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const {getSavedContractAddresses, getIdoAddressesFromDb, updateIdoAddressesToDb, getIdoAddressesFromDbByStatus} = require('./utils/utils');
+const { getSavedContractAddresses, getIdoAddressesFromDb, updateIdoAddressesToDb, getIdoAddressesFromDbByStatus } = require('./utils/utils');
 const yesno = require('yesno');
 const config = require('./configs/DisperseConfig.json');
 
@@ -13,7 +13,7 @@ const ERROR_CODE = 3;
 // Sleep func
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Milliseconds
-const SLEEP_MS = 30000;
+const SLEEP_MS = 50000;
 // const SLEEP_MS_UPDATE_DB = 2000;
 
 // Maximum number of transfers
@@ -21,7 +21,7 @@ const MAXNUMBEROFTX = 50;
 
 // Approve amount (Larger than actual amount)
 // Actual amount: 16068833.6673
-const APPROVE_AMOUNT = 16069000;
+const APPROVE_AMOUNT = 300000;
 // const APPROVE_AMOUNT = 4750;
 // 16,073,750
 
@@ -37,7 +37,7 @@ async function main() {
     const token_symbol = await token_contract.symbol();
     console.log(`The address of the token to be distributed is $${token_symbol}: ${token_contract.address}`);
     console.log(`The decimal of the token is ${decimals}`);
-    
+
     const address_infos = await getIdoAddressesFromDb();
     let addresses = new Array();
     let amounts = new Array();
@@ -45,7 +45,7 @@ async function main() {
     for (let i = 0; i < address_infos.length; i++) {
         const address_info = address_infos[i];
         addresses.push(address_info.address);
-        amounts.push(hre.ethers.utils.parseUnits(address_info.amount, decimals));
+        amounts.push(hre.ethers.utils.parseUnits(address_info.amount.toString(), decimals));
         totalAmount += parseFloat(address_info.amount);
     }
 
@@ -53,8 +53,8 @@ async function main() {
         console.log("The parameter length is different.");
         return;
     }
-    console.log(`Should be approve ${hre.ethers.utils.parseUnits(''+totalAmount, decimals)} to ${disperse_contract.address}`);
-    await token_contract.approve(disperse_contract.address, hre.ethers.utils.parseUnits(''+APPROVE_AMOUNT, decimals));
+    console.log(`Should be approve ${hre.ethers.utils.parseUnits('' + totalAmount, decimals)} to ${disperse_contract.address}`);
+    await token_contract.approve(disperse_contract.address, hre.ethers.utils.parseUnits('' + APPROVE_AMOUNT, decimals));
     console.log(`token.approve(${disperse_contract.address}), amount is ${APPROVE_AMOUNT}.`);
     let ok = await yesno({
         question: 'Are you sure you want to continue?'
@@ -67,7 +67,7 @@ async function main() {
     const success_addresses = await getIdoAddressesFromDbByStatus(SUCCESS_CODE);
     var progress_count = success_addresses.length;
     console.log(`The number of addresses currently transferred is ${progress_count}`);
-    
+
     while (true) {
         const address_infos = await getIdoAddressesFromDb(MAXNUMBEROFTX);
         if (address_infos.length == 0) {
@@ -82,7 +82,7 @@ async function main() {
         for (let i = 0; i < address_infos.length; i++) {
             const address_info = address_infos[i];
             addresses.push(address_info.address);
-            amounts.push(hre.ethers.utils.parseUnits(address_info.amount, decimals));
+            amounts.push(hre.ethers.utils.parseUnits(address_info.amount.toString(), decimals));
         }
         if (addresses.length != amounts.length) {
             console.log("EEROR: The parameter length is different.");
@@ -119,7 +119,7 @@ async function main() {
     }
 
 
-    
+
     // var count = 0;
     // const batch = parseInt(addresses.length / MAXNUMBEROFTX);
     // for (let i = 0; i <= batch; i++) {
