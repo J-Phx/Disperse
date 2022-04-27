@@ -11,6 +11,7 @@ def get_event():
     w3 = Web3(Web3.HTTPProvider(default_config["rpc"]))
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     contract_instance = w3.eth.contract(address=default_config["contract_address"], abi=default_config["contract_abi"])
+    print(contract_instance.events._events)
 
     fromBlock = args.start if args.start else default_config["start_blockNumber"]
     toBlock = args.end if args.end else default_config["end_blockNumber"]
@@ -72,16 +73,17 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     print(args)
-    default_config = json.load(open(os.path.dirname(
-        __file__) + "\\configs\\UniversalEventFilter.json"), encoding="utf-8")[args.network]
+    default_config = json.load(open(os.path.join(os.path.dirname(
+        __file__), "configs", "UniversalEventFilter.json")), encoding="utf-8")[args.network]
 
     # Processing output file
     if args.outfile:
         if args.outfile.endswith(".csv"):
             out_file = args.outfile
         else:
-            out_file = os.path.dirname(
-                args.outfile) + f"\\{args.network}_{args.eventName}_{args.start}_to_{args.end}.csv"
+            out_file = os.path.join(os.path.dirname(
+                args.outfile), f"{args.network}_{args.eventName}_{args.start}_to_{args.end}.csv")
+
     else:
         out_file = f"{args.network}_{args.eventName}_{args.start}_to_{args.end}.csv"
     print(f"=====outfile=====> {out_file}")
