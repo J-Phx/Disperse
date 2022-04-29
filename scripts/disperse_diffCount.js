@@ -13,7 +13,7 @@ const ERROR_CODE = 3;
 // Sleep func
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Milliseconds
-const SLEEP_MS = 50000;
+let SLEEP_MS;
 // const SLEEP_MS_UPDATE_DB = 2000;
 
 // Maximum number of transfers
@@ -24,11 +24,17 @@ const MAXNUMBEROFTX = 50;
 const APPROVE_AMOUNT = 300000;
 // const APPROVE_AMOUNT = 4750;
 // 16,073,750
+const APPROVE_BRE_AMOUNT = 100000000
 
 
 async function main() {
     const contracts = getSavedContractAddresses()[hre.network.name];
     const c = config[hre.network.name]
+    if (hre.network.name.startsWith("boba")) {
+        SLEEP_MS = 50000;
+    } else if (hre.network.name.startsWith("bsc")) {
+        SLEEP_MS = 30000;
+    }
 
     const disperse_contract = await hre.ethers.getContractAt('Disperse', contracts['DISPERSE']);
     console.log(`Disperse contract address is ${disperse_contract.address}`);
@@ -53,14 +59,27 @@ async function main() {
         console.log("The parameter length is different.");
         return;
     }
-    console.log(`Should be approve ${hre.ethers.utils.parseUnits('' + totalAmount, decimals)} to ${disperse_contract.address}`);
-    await token_contract.approve(disperse_contract.address, hre.ethers.utils.parseUnits('' + APPROVE_AMOUNT, decimals));
-    console.log(`token.approve(${disperse_contract.address}), amount is ${APPROVE_AMOUNT}.`);
+    const allowance = await token_contract.allowance(c.caller, disperse_contract.address);
+    const allowance_dex = hre.ethers.utils.formatUnits(allowance, decimals);
+    console.log(`User(${c.caller}) approved <${disperse_contract.address}> using ${allowance_dex} $${token_symbol}`);
     let ok = await yesno({
         question: 'Are you sure you want to continue?'
     });
     if (!ok) {
         process.exit(0)
+    }
+
+    if (allowance_dex < totalAmount) {
+        console.log(`Should be approve ${hre.ethers.utils.parseUnits('' + totalAmount, decimals)} to ${disperse_contract.address}`);
+        await token_contract.approve(disperse_contract.address, hre.ethers.utils.parseUnits('' + APPROVE_BRE_AMOUNT, decimals));
+        console.log(`token.approve(${disperse_contract.address}), amount is ${APPROVE_BRE_AMOUNT}.`);
+
+        ok = await yesno({
+            question: 'Are you sure you want to continue?'
+        });
+        if (!ok) {
+            process.exit(0)
+        }
     }
 
     // Current progress

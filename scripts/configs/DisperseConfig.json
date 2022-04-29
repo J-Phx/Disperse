@@ -1,6 +1,7 @@
 {
   "boba_mainnet": {
-    "token_address": "0xF08AD7C3f6b1c6843ba027AD54Ed8DDB6D71169b",
+    "caller": "0x24e1Ae757ca647101B0e7614217b7AE26338F578",
+    "token_address": "0x3A93bD0fA10050d206370eeA53276542A105C885",
     "token_abi": [
       {
         "type": "constructor",
@@ -314,6 +315,7 @@
     ]
   },
   "bsc_mainnet": {
+    "caller": "0x24e1Ae757ca647101B0e7614217b7AE26338F578",
     "token_address": "0x9eBBEB7f6b842377714EAdD987CaA4510205107A",
     "token_abi": [
       {
@@ -628,6 +630,7 @@
     ]
   },
   "boba_rinkeby": {
+    "caller": "0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67",
     "token_address": "0xAfc888BB232825e770864D5F9D609ff0A26b6719",
     "token_abi": [
       {
@@ -942,6 +945,7 @@
     ]
   },
   "bsc_testnet": {
+    "caller": "0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67",
     "token_address": "0x4c0060a9D3932c5aDd8758a594627b4E41759a7a",
     "token_abi": [
       {
@@ -1256,6 +1260,7 @@
     ]
   },
   "rinkeby": {
+    "caller": "0x67C09A12125De06f23Ac79FCA1336F3bdf97fE67",
     "token_address": "0x85fDfa14D4D1284Bc26FEe8278755258db1Ab03A",
     "token_abi": [
       {
