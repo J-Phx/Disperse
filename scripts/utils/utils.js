@@ -54,6 +54,28 @@ function getSavedContractAddresses() {
     return addrs
 }
 
+function getLPTStakeAddresses() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./lpt_staked_address.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
+function getDepositedUser() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./now_deposited_user.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
 function getTestAddresses() {
     let data
     try {
@@ -112,7 +134,7 @@ async function updateIdoAddressesToDb(addresses, status) {
     var instring = "'" + addresses.join("','") + "'";
     let sql = `UPDATE ido_addresses SET status=${status} WHERE address in (${instring})`;
     await query(sql);
-    
+
 }
 
 async function insertAirdropAddressesToDdb(values) {
@@ -198,6 +220,21 @@ function saveBscStakeAllTx(txHash, txData) {
     fs.writeFileSync(path.join(__dirname, './allTx.json'), JSON.stringify(infos, null, '    '))
 }
 
+function saveLPTStakeAddresses(network, data, lastBlockNumber) {
+    const infos = getLPTStakeAddresses() || {};
+    let data_infos = infos[network] || {};
+    let exist_data = data_infos['addresses'] || [];
+    exist_data.push.apply(exist_data, data);
+    infos[network] = { 'addresses': exist_data, 'lastBlockNumber': lastBlockNumber };
+    fs.writeFileSync(path.join(__dirname, './lpt_staked_address.json'), JSON.stringify(infos, null, '    '));
+}
+
+function saveDepositedUser(network, data) {
+    const infos = getDepositedUser() || {};
+    infos[network] = data;
+    fs.writeFileSync(path.join(__dirname, './now_deposited_user.json'), JSON.stringify(infos, null, '    '));
+}
+
 function saveCompleteAddress(addresses) {
     var infos = getCompleteAddress() || []
     infos = infos.concat(addresses)
@@ -207,6 +244,8 @@ function saveCompleteAddress(addresses) {
 
 module.exports = {
     getTestAddresses,
+    getLPTStakeAddresses,
+    getDepositedUser,
     getIdoAddresses,
     getIdoAddressesFromDb,
     getIdoAddressesFromDbByStatus,
@@ -221,5 +260,7 @@ module.exports = {
     saveStakeConfig,
     saveContractAddress,
     saveBscStakeAllTx,
-    saveCompleteAddress
+    saveCompleteAddress,
+    saveLPTStakeAddresses,
+    saveDepositedUser
 }
