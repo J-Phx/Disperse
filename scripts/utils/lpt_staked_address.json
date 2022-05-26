@@ -108,7 +108,7 @@
             "0x67326febe1547b6F4Bb07bbae0a332CE2071F5Ea",
             "0x51b0A8D89EDB1146c55e72b3cF028560DeFa129b"
         ],
-        "lastBlockNumber": 606605
+        "lastBlockNumber": 608555
     },
     "bsc_mainnet": {
         "addresses": [
@@ -2115,8 +2115,10 @@
             "0xBe236b156768801CCAF59d3AeE864f51133aeEee",
             "0xD00D8234BF05ab555414355Ff9ff0E6871fb359F",
             "0xf422B71f59bC02Dd20574A25685A6459269C82E7",
-            "0x0BBa2D458C22bba21816FeBB4f51B7f62371585c"
+            "0x0BBa2D458C22bba21816FeBB4f51B7f62371585c",
+            "0xf87577Be0Cd3CfBF4D8B7A146e51887347BAbf83",
+            "0x102582b47711F2fC378045f560AeA29cf4bFA6e5"
         ],
-        "lastBlockNumber": 17873860
+        "lastBlockNumber": 17899623
     }
 }

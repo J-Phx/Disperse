@@ -76,6 +76,39 @@ function getDepositedUser() {
     return data_json
 }
 
+function getTwitterActiveUser() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./twitter_active.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
+function getBREHolder() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "../actives/neopets/BRE_Holder_Forms.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
+function getBNBHolder() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "../actives/cyberpop/Score_BNB_Holder.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
 function getTestAddresses() {
     let data
     try {
@@ -242,10 +275,38 @@ function saveCompleteAddress(addresses) {
     fs.writeFileSync(path.join(__dirname, './complete_address.json'), JSON.stringify(infos, null, '    '))
 }
 
+function saveTwitterActiveUserBalance(address, balance) {
+    var infos = getTwitterActiveUser() || {}
+    infos[address]["balance"] = balance
+    fs.writeFileSync(path.join(__dirname, './twitter_active.json'), JSON.stringify(infos, null, '    '))
+    // fs.writeFile(path.join(__dirname, './twitter_active.json'), JSON.stringify(infos, null, '    '), err => {
+    //     if (!err) {
+    //         console.log('写入成功');
+    //     } else {
+    //         console.log(err);
+    //     }
+    // })
+}
+
+function saveBREHolder(address, balance) {
+    var infos = getBREHolder() || {}
+    infos[address] = infos[address] + balance
+    fs.writeFileSync(path.join(__dirname, '../actives/neopets/BRE_Holder_Forms.json'), JSON.stringify(infos, null, '    '))
+}
+
+function saveBNBHolder(address, balance) {
+    var infos = getBNBHolder() || {}
+    infos[address] = balance
+    fs.writeFileSync(path.join(__dirname, '../actives/cyberpop/Score_BNB_Holder.json'), JSON.stringify(infos, null, '    '))
+}
+
 module.exports = {
+    getBREHolder,
+    getBNBHolder,
     getTestAddresses,
     getLPTStakeAddresses,
     getDepositedUser,
+    getTwitterActiveUser,
     getIdoAddresses,
     getIdoAddressesFromDb,
     getIdoAddressesFromDbByStatus,
@@ -262,5 +323,8 @@ module.exports = {
     saveBscStakeAllTx,
     saveCompleteAddress,
     saveLPTStakeAddresses,
-    saveDepositedUser
+    saveDepositedUser,
+    saveTwitterActiveUserBalance,
+    saveBREHolder,
+    saveBNBHolder
 }
