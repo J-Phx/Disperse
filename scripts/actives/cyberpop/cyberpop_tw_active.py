@@ -11,7 +11,7 @@ import pandas as pd
 
 
 if __name__ == "__main__":
-    neopets_followers_file = os.path.join(os.path.dirname(
+    cyberpop_followers_file = os.path.join(os.path.dirname(
         __file__), "cyberpop_followers.json")
     brewery_followers_file = os.path.join(os.path.dirname(
         __file__), "brewery_followers.json")
@@ -31,14 +31,14 @@ if __name__ == "__main__":
     brewery_followers = set(json.load(open(brewery_followers_file, 'r', encoding='utf-8')).values())
     print(f"Brewery twitter followers: {len(brewery_followers)}")
 
-    neopets_followers = set(json.load(open(neopets_followers_file, 'r', encoding='utf-8')).values())
-    print(f"Neopets twitter followers: {len(neopets_followers)}")
+    cyberpop_followers = set(json.load(open(cyberpop_followers_file, 'r', encoding='utf-8')).values())
+    print(f"Neopets twitter followers: {len(cyberpop_followers)}")
 
     rt_and_like_users = set(json.load(open(rt_and_like_users_file, 'r', encoding='utf-8')).values())
     print(f"RT and Like users: {len(rt_and_like_users)}")
 
-    participate_users = json.load(open(participate_users_file, 'r', encoding='utf-8'))
-    print(f"Participate users: {len(participate_users)}")
+    participate_user_infos = json.load(open(participate_users_file, 'r', encoding='utf-8'))
+    print(f"Participate users: {len(participate_user_infos)}")
 
     users_balance_infos = json.load(open(users_balance_file, 'r', encoding='utf-8'))
     print(f"Users balance info: {len(users_balance_infos)}")
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     result = []
     for address, balance in participate_users.items():
-        data = participate_users[address]
+        data = participate_user_infos[address]
         emil = data[1]
         tw_username = data[2]
         dc_username = data[3]
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
         if not tw_username in brewery_followers:
             continue
-        if not tw_username in neopets_followers:
+        if not tw_username in cyberpop_followers:
             continue
         if not tw_username in rt_and_like_users:
             continue
