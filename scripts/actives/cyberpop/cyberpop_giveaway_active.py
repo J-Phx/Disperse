@@ -34,7 +34,21 @@ def process_nft_holder():
     holders = {}
     # user_balance = {}
     for data in form_result[1:]:
-        holders[data[5]] = data[7]
+        holders[data[5].lower()] = data[7]
+
+    holder_set = set(nft_user_infos.keys())
+    participate_users = []
+    for user, data in nft_user_infos.items():
+        if user.lower() in holder_set:
+            data.append(holders.get(user.lower()))
+            participate_users.append(data)
+
+    print(f"Result length: {len(participate_users)}")
+    participate_users_infos = list(sorted(participate_users, key=lambda x: x[-1], reverse=True))
+
+    column_names.append("NFT Amount")
+    pd.DataFrame(participate_users_infos, columns=column_names).to_csv(
+        nft_holder_output_file, index=False, encoding='utf-8')
 
 
 if __name__ == "__main__":
@@ -46,7 +60,7 @@ if __name__ == "__main__":
     nft_holder_file = os.path.join(os.path.dirname(
         __file__), "cyberpop_nft_holder.csv")
     nft_user_file = os.path.join(os.path.dirname(
-        __file__), "BRE_Holder_Forms.json")
+        __file__), "genesis_nft_holders_info.json")
     nft_user_infos = json.load(open(nft_user_file, 'r', encoding='utf-8'))
     print(f"Users balance info: {len(nft_user_infos)}")
     bre_balance_file = os.path.join(os.path.dirname(
