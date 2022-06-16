@@ -6,7 +6,7 @@ typechain
 package-lock.json
 scripts/utils/*.json
 scripts/actives/*/*.json
-# scripts/utils/*.csv
+scripts/utils/*.csv
 
 #Hardhat files
 cache

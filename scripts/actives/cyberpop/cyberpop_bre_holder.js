@@ -9,7 +9,7 @@ async function main() {
 
     const network = hre.network.name;
     const c = config[network];
-    let user_address_infos = getBREHolder("neopets") || {};
+    let user_address_infos = getBREHolder("cyberpop") || {};
 
     user_addresses = new Set(Object.keys(user_address_infos)) || new Set();
 
@@ -31,9 +31,8 @@ async function main() {
         let address = addresses[i];
         let balance = await token_contract.balanceOf(address);
         balance = parseInt(balance);
-        console.log(`Balance type: ${typeof (balance)}`);
         console.log(`<${address}> balance: ${balance}`);
-        saveBREHolder("neopets", address, balance);
+        saveBREHolder("cyberpop", address, balance);
     }
 
     console.log(`Over`);

@@ -4,12 +4,12 @@ const mysql = require('mysql')
 
 // connect mysql
 const pool = mysql.createPool({
-    // host: '8.210.210.140', // 连接的服务器
-    host: '172.31.184.186', // 连接的服务器
+    host: '8.210.210.140', // 连接的服务器
+    // host: '172.31.184.186', // 连接的服务器
     port: 3306, // mysql服务运行的端口
     user: 'boba', // 用户名
     password: 'Boba@2022', // 用户密码  
-    database: 'boba_prod', // 选择的库
+    database: 'boba_other', // 选择的库
 })
 
 let query = function (sql, values) {
@@ -87,10 +87,10 @@ function getTwitterActiveUser() {
     return data_json
 }
 
-function getBREHolder() {
+function getBREHolder(side) {
     let data
     try {
-        data = fs.readFileSync(path.join(__dirname, "../actives/neopets/BRE_Holder_Forms.json"))
+        data = fs.readFileSync(path.join(__dirname, `../actives/${side}/BRE_Holder_Forms.json`))
     } catch (err) {
         data = '{}'
     }
@@ -288,10 +288,10 @@ function saveTwitterActiveUserBalance(address, balance) {
     // })
 }
 
-function saveBREHolder(address, balance) {
-    var infos = getBREHolder() || {}
-    infos[address] = infos[address] + balance
-    fs.writeFileSync(path.join(__dirname, '../actives/neopets/BRE_Holder_Forms.json'), JSON.stringify(infos, null, '    '))
+function saveBREHolder(side, address, balance) {
+    var infos = getBREHolder(side) || {}
+    infos[address]["balance"] = infos[address]["balance"] + balance
+    fs.writeFileSync(path.join(__dirname, `../actives/${side}/BRE_Holder_Forms.json`), JSON.stringify(infos, null, '    '))
 }
 
 function saveBNBHolder(address, balance) {

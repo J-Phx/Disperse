@@ -10,7 +10,7 @@
     "dotenv": "^16.0.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
-    "hardhat": "^2.8.4",
+    "hardhat": "^2.9.9",
     "mysql": "^2.18.1",
     "yesno": "^0.3.1"
   },
