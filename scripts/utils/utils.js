@@ -131,6 +131,17 @@ function getIdoAddresses() {
     return data_json
 }
 
+function getMoveMatedata() {
+    let data
+    try {
+        data = fs.readFileSync(path.join(__dirname, "./move_matedata.json"))
+    } catch (err) {
+        data = '{}'
+    }
+    const data_json = JSON.parse(data)
+    return data_json
+}
+
 async function getIdoAddressesFromDb(limit) {
     console.log('================SELECT==================');
     let sql;
@@ -300,6 +311,12 @@ function saveBNBHolder(address, balance) {
     fs.writeFileSync(path.join(__dirname, '../actives/cyberpop/Score_BNB_Holder.json'), JSON.stringify(infos, null, '    '))
 }
 
+function saveMoveMatedata(tokenId, rarity) {
+    var infos = getMoveMatedata() || {}
+    infos[tokenId] = rarity
+    fs.writeFileSync(path.join(__dirname, './move_matedata.json'), JSON.stringify(infos, null, '    '))
+}
+
 module.exports = {
     getBREHolder,
     getBNBHolder,
@@ -316,6 +333,7 @@ module.exports = {
     getCompleteAddress,
     getStakeConfig,
     getSavedContractAddresses,
+    getMoveMatedata,
     updateIdoAddressesToDb,
     insertAirdropAddressesToDdb,
     saveStakeConfig,
@@ -326,5 +344,6 @@ module.exports = {
     saveDepositedUser,
     saveTwitterActiveUserBalance,
     saveBREHolder,
-    saveBNBHolder
+    saveBNBHolder,
+    saveMoveMatedata
 }
