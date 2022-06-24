@@ -15,6 +15,7 @@
     "yesno": "^0.3.1"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.42.0"
+    "@solana/web3.js": "^1.42.0",
+    "axios": "^0.27.2"
   }
 }
