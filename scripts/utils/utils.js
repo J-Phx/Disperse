@@ -4,8 +4,8 @@ const mysql = require('mysql')
 
 // connect mysql
 const pool = mysql.createPool({
-    host: '8.210.210.140', // 连接的服务器
-    // host: '172.31.184.186', // 连接的服务器
+    // host: '8.210.210.140', // 连接的服务器
+    host: '172.31.184.186', // 连接的服务器
     port: 3306, // mysql服务运行的端口
     user: 'boba', // 用户名
     password: 'Boba@2022', // 用户密码  
