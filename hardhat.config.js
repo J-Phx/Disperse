@@ -36,7 +36,7 @@ module.exports = {
       accounts: [process.env.BSC_TESTNET_PK],
     },
     rinkeby: {
-      url: 'https://rinkeby.infura.io/v3/99421d9136654a658cd4e2d499b51f8b',
+      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API}`,
       chainId: 4,
       gas: 5000000,
       accounts: [process.env.BSC_TESTNET_PK],
@@ -61,8 +61,8 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      bscTestnet: '59GYEFGSN1RYQK5XX6MRRCP1JD5MZJETNF',
-      bsc: 'FP5AQFRD8I61QQ6E2V52YT61ABXDGP4J7S'
+      bscTestnet: process.env.BSC_TESTNET_API,
+      bsc: process.env.BSC_MAINNET_API
     }
   },
 };
