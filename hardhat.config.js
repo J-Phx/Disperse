@@ -41,6 +41,12 @@ module.exports = {
       gas: 5000000,
       accounts: [process.env.BSC_TESTNET_PK],
     },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_API}`,
+      chainId: 5,
+      gas: 5000000,
+      accounts: [process.env.BSC_TESTNET_PK],
+    },
     local: {
       url: 'http://localhost:8545',
     },
