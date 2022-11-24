@@ -316,7 +316,7 @@
   },
   "bsc_mainnet": {
     "caller": "0x24e1Ae757ca647101B0e7614217b7AE26338F578",
-    "token_address": "0x9eBBEB7f6b842377714EAdD987CaA4510205107A",
+    "token_address": "0x55d398326f99059fF775485246999027B3197955",
     "token_abi": [
       {
         "inputs": [

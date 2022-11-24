@@ -9,9 +9,12 @@
         "DISPERSE": "0xF40061C64B0DaB7832f36e6a1FC892807a72C83D"
     },
     "bsc_testnet": {
-        "DISPERSE": "0xAE069676C6050C8428fd758ca013d1B942CD0F41"
+        "DISPERSE": "0x733ead09815c83892deD73C2D7BA182Fa2FF59BF"
     },
     "rinkeby": {
         "DISPERSE": "0xa5b5c06E39fb9751318841ef0FB2e0234a8d283a"
+    },
+    "goerli": {
+        "DISPERSE": "0x6912A87B760B97d81d4c7D5824F9D94D4Ee79ac5"
     }
 }
